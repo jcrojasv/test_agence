@@ -1,0 +1,124 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+     
+    <title>{% block title %} {% endblock %} | TestAgence </title>
+     
+    <!-- Bootstrap CDN-->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Font Awesome CDN -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+     <link href="{% static 'js/vendors/normalize-css/normalize.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/custom.min.css' %}" rel="stylesheet">
+
+     <!-- NProgress -->
+    <link href="{% static 'js/vendors/nprogress/nprogress.css' %}" rel="stylesheet">
+
+
+    {% block extra_css %} {% endblock %}
+     
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>TestAgence</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <div class="profile clearfix">
+              <div class="profile_pic">
+                <img src="{% static 'images/user.png' %}" alt="..." class="img-circle profile_img">
+              </div>
+              <div class="profile_info">
+                <span>Bienvenido,</span>
+                <h2><usuario></h2>
+              </div>
+            </div>
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'base/menu.html' %}
+            <!-- /sidebar menu -->
+           
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        {% include 'base/top_nav.html' %}
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        
+        <div class="right_col" role="main">
+          {% block content %} {% endblock %}
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            TestAgence - Sistema de prueba <a href="#">JC&PV Inc.</a>
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>-->
+    <script src="{% static 'js/vendors/jquery/dist/jquery.min.js' %} "></script>
+    <!-- Bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- FastClick -->
+    <script src="{% static 'js/vendors/fastclick/lib/fastclick.js' %}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'js/vendors/nprogress/nprogress.js' %}"></script>
+    
+    <!-- Skycons -->
+    <script src="{% static 'js/vendors/skycons/skycons.js' %}"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'js/custom.js' %}"></script>
+
+    <!-- Validator -->
+    <script src="{% static 'js/vendors/validator/validator.js' %}"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        NProgress.start();
+    });
+
+    $(window).load(function () {
+        NProgress.done();
+    });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+  
+  </body>
+</html>
