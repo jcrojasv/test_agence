@@ -1,45 +1,84 @@
 {% extends 'base/base.html' %}
 
 {% load staticfiles %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 
-{% block title %} Desempeño {% endblock  %}
+{% block title %} {% trans "Desempeño" %} {% endblock  %}
 
 {% block content %}
 
-<h3>Consultor <small>Desempeño</small></h3>
+<h3>{% trans "Consultor" %} <small>{% trans "Desempeño" %}</small></h3>
 
 <div class="row">
-    <div class="col-md-6 col-xs-12">
+    <div class="col-md-12 col-xs-12">
         <div class="x_panel">
         	<div class="x_title">
-                <h2>Parametros de la consulta</h2>
+                <h2>{% trans "Parámetros de la consulta" %} </h2>
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
 
+                {% include 'consultor/_form_parameters.html' %}
+     
             </div>
         </div><!-- fin x-panel-->	
     </div>
 
-    <div class="col-md-6 col-xs-12">
-        <div class="x_panel">
-        	<div class="x_title">
-                <h2>Consultores seleccionados</h2>
-                <div class="clearfix"></div>
-            </div>
-            <div class="x_content">
-
-            </div>
-        </div><!-- fin x-panel-->
-    </div>
 </div>
 
 {% endblock %}
 
 {% block extra_css %}
-   <link rel="stylesheet" type="text/css" href="{% static 'js/vendors/jquery.tagsinput/src/jquery.tagsinput.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'js/vendors/bootstrap-datepicker/css/bootstrap-datepicker.min.css' %}">
 {% endblock %}
 
 {% block extra_js %}
-   <script type="text/javascript" src="{% static 'js/vendors/jquery.tagsinput/src/jquery.tagsinput.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/vendors/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
+<script src="{% static 'js/vendors/moment/min/moment.min.js' %}"></script>
+{% if lang == 'es' %}
+  <script type="text/javascript" src="{% static 'js/vendors/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js' %}"></script>
+{% endif %}
+<script type="text/javascript">
+$(document).ready(function(){
+    var startDate = new Date();
+    var fechaFin = new Date();
+    var FromEndDate = new Date();
+    var ToEndDate = new Date();
+
+    $('.from').datepicker({
+        autoclose: true,
+        minViewMode: 1,
+        format: 'mm/yyyy'
+    }).on('changeDate', function(selected){
+            startDate = new Date(selected.date.valueOf());
+            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+            $('.to').datepicker('setStartDate', startDate);
+        }); 
+
+    $('.to').datepicker({
+        autoclose: true,
+        minViewMode: 1,
+        format: 'mm/yyyy'
+    }).on('changeDate', function(selected){
+            FromEndDate = new Date(selected.date.valueOf());
+            FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
+            $('.from').datepicker('setEndDate', FromEndDate);
+    });
+
+    $('#add').on('click', function(event) {
+        event.preventDefault();
+        return !$('#id_consultants option:selected').remove().appendTo('#id_co_select'); 
+    }); 
+
+    $('#del').on('click', function() { 
+        return !$('#id_co_select option:selected').remove().appendTo('#id_consultants'); 
+    });
+
+    $('#relatorio').on('click', function(event) {
+        event.preventDefault();
+        console.log('Relatorio');
+    });
+});
+</script>
 {% endblock %}

@@ -1,5 +1,87 @@
 from django.db import models
 
+
+class CaoUsuario(models.Model):
+    co_usuario = models.CharField(primary_key=True, max_length=20)
+    no_usuario = models.CharField(max_length=50)
+    ds_senha = models.CharField(max_length=14)
+    co_usuario_autorizacao = models.CharField(max_length=20, blank=True, null=True)
+    nu_matricula = models.BigIntegerField(blank=True, null=True)
+    dt_nascimento = models.DateField(blank=True, null=True)
+    dt_admissao_empresa = models.DateField(blank=True, null=True)
+    dt_desligamento = models.DateField(blank=True, null=True)
+    dt_inclusao = models.DateTimeField(blank=True, null=True)
+    dt_expiracao = models.DateField(blank=True, null=True)
+    nu_cpf = models.CharField(max_length=14, blank=True, null=True)
+    nu_rg = models.CharField(max_length=20, blank=True, null=True)
+    no_orgao_emissor = models.CharField(max_length=10, blank=True, null=True)
+    uf_orgao_emissor = models.CharField(max_length=2, blank=True, null=True)
+    ds_endereco = models.CharField(max_length=150, blank=True, null=True)
+    no_email = models.CharField(max_length=100, blank=True, null=True)
+    no_email_pessoal = models.CharField(max_length=100, blank=True, null=True)
+    nu_telefone = models.CharField(max_length=64, blank=True, null=True)
+    dt_alteracao = models.DateTimeField()
+    url_foto = models.CharField(max_length=255, blank=True, null=True)
+    instant_messenger = models.CharField(max_length=80, blank=True, null=True)
+    icq = models.PositiveIntegerField(blank=True, null=True)
+    msn = models.CharField(max_length=50, blank=True, null=True)
+    yms = models.CharField(max_length=50, blank=True, null=True)
+    ds_comp_end = models.CharField(max_length=50, blank=True, null=True)
+    ds_bairro = models.CharField(max_length=30, blank=True, null=True)
+    nu_cep = models.CharField(max_length=10, blank=True, null=True)
+    no_cidade = models.CharField(max_length=50, blank=True, null=True)
+    uf_cidade = models.CharField(max_length=2, blank=True, null=True)
+    dt_expedicao = models.DateField(blank=True, null=True)
+
+
+    class Meta:
+        managed = False
+        db_table = 'cao_usuario'
+
+    def __str__(self):
+        return self.no_usuario
+
+
+    def get_absolute_url(self):
+        return reverse('model-detail-view', args=[str(self.co_usuario)])
+
+
+    def get_for_select():
+        sql = '''SELECT u.co_usuario, u.no_usuario FROM cao_usuario u 
+        INNER JOIN permissao_sistema p ON p.co_usuario = u.co_usuario
+        WHERE in_ativo = \'S\' AND co_tipo_usuario IN (0,1,2)'''
+        users = CaoUsuario.objects.raw(sql)
+        list_users = []
+        for u in users:
+            list_users.append((u.co_usuario, u.no_usuario,))
+        
+        return list_users
+
+
+class PermissaoSistema(models.Model):
+    co_usuario = models.CharField(primary_key=True, max_length=20)
+    co_tipo_usuario = models.BigIntegerField()
+    co_sistema = models.BigIntegerField()
+    in_ativo = models.CharField(max_length=1)
+    co_usuario_atualizacao = models.CharField(max_length=20, blank=True, null=True)
+    dt_atualizacao = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'permissao_sistema'
+        unique_together = (('co_usuario', 'co_tipo_usuario', 'co_sistema'),)
+
+
+class TipoUsuario(models.Model):
+    co_tipo_usuario = models.BigIntegerField(primary_key=True)
+    ds_tipo_usuario = models.CharField(max_length=32)
+    co_sistema = models.BigIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'tipo_usuario'
+        unique_together = (('co_tipo_usuario', 'co_sistema'),)
+
 """
 
 class CaoAcompanhamentoSistema(models.Model):
