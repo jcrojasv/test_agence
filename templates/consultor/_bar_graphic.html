@@ -1,0 +1,41 @@
+{% load staticfiles %}
+<div class="x_panel">
+  <div class="x_title">
+        <h2></h2>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+        <div id="chart"></div>
+    </div>
+  
+</div>
+<script src="{% static 'js/vendors/jquery/dist/jquery.min.js' %} "></script>
+<script>
+
+$(document).ready(function() {
+    var data = [
+      {% for d in data %}
+        {y: '{{ d.co_usuario }}', a: '{{ d.ganancia_neta }}'}
+        {% if not loop.last  %} , {% endif %}
+      {% endfor %}
+    ],
+    config = {
+      data: data,
+      xkey: 'y',
+      ykeys: ['a'],
+      labels: ['Total'],
+      fillOpacity: 0.6,
+      hideHover: 'auto',
+      behaveLikeLine: true,
+      resize: true,
+      pointFillColors:['#ffffff'],
+      pointStrokeColors: ['black'],
+      lineColors:['gray','red']
+  };
+
+    config.element = 'chart';
+    Morris.Bar(config);
+
+    
+});
+</script>

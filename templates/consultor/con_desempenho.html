@@ -40,9 +40,12 @@
     float: left;
 } 
 </style>
+<link rel="stylesheet" href="{% static 'js/vendors/morris.js/morris.css' %}">
 {% endblock %}
 
 {% block extra_js %}
+<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
+<script type="text/javascript" src="{% static 'js/vendors/morris.js/morris.min.js' %}"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -58,7 +61,6 @@ $(document).ready(function(){
 
     $('#relatorio').on('click', function(event) {
         event.preventDefault();
-        console.log('Relatorio');
         $.ajax({
             url : "consultor/relatorio/", // the endpoint
             type : "POST", // http method
@@ -67,8 +69,7 @@ $(document).ready(function(){
             // handle a successful response
             success : function(data) {
                 $("#result").html(data);
-                console.log(data); // log the returned json to the console
-                console.log("success"); // another sanity check
+                console.log("success"); 
             },
 
             // handle a non-successful response
@@ -80,6 +81,52 @@ $(document).ready(function(){
         });
     });
 
+    $('#graphic').on('click', function(event) {
+        event.preventDefault();
+        console.log('Desplegar grafico');
+        $.ajax({
+            url : "consultor/bar_graphic/", // the endpoint
+            type : "POST", // http method
+            data : $('#frm').serialize(), // data sent with the post request
+
+            // handle a successful response
+            success : function(data) {
+                $("#result").html(data);
+                console.log(data);
+                console.log("success"); 
+            },
+
+            // handle a non-successful response
+            error : function(xhr,errmsg,err) {
+                $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                    " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+        });
+    });
+
+    $('#pie').on('click', function(event) {
+        event.preventDefault();
+        console.log('Desplegar grafico');
+        $.ajax({
+            url : "consultor/pie_graphic/", // the endpoint
+            type : "POST", // http method
+            data : $('#frm').serialize(), // data sent with the post request
+
+            // handle a successful response
+            success : function(data) {
+                $("#result").html(data);
+                console.log("success"); 
+            },
+
+            // handle a non-successful response
+            error : function(xhr,errmsg,err) {
+                $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                    " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+        });
+    });
 
     
 });

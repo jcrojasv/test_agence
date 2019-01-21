@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.urls import path
 
-from apps.consultor.views import index, ajax_relatorio
+from apps.consultor.views import index, ajax_relatorio, ajax_bar_graphic, ajax_pie_graphic
 
 urlpatterns = [   
     path('', index, name='index'),
-    path('relatorio/', ajax_relatorio, name='relatorio')
+    path('relatorio/', ajax_relatorio, name='relatorio'),
+    path('bar_graphic/', ajax_bar_graphic, name='bar_graphic'),
+    path('pie_graphic/', ajax_pie_graphic, name='pie_graphic'),
 ]

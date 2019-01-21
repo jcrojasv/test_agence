@@ -8,17 +8,6 @@ from django.core.serializers import serialize
 print (connection.queries)
 
 def index(request):
-    users = ''
-    for u in ['anapaula.chiodaro', 'show']:
-        users += "'"+u+"',"
-
-    users = users[:-1] 
-    #consulta de relatorio
-    result = CaoFatura.tmp_sql_totals('2007-02-01', '2007-04-01', users)
-
-
-    ##print(result)
-
     
     data = {
       'lang': request.LANGUAGE_CODE,
@@ -82,4 +71,107 @@ def ajax_relatorio(request):
         data = {'status': 'error en el metodo',}
 
     return render(request, 'consultor/_table_relatorio.html', data)
+
+
+def ajax_bar_graphic(request):
+    from xml.dom import minidom
+    from django.conf import settings 
+    base_dir = settings.BASE_DIR
+
+    #  xml document
+    #doc = minidom.parse(base_dir+"/data_line_bar.xml")
+    doc = minidom.parse(base_dir+"/example.xml")
+
+    _xml = doc.getElementsByTagName("empleado")[0]
+
+    print(_xml)
+
+
+    if request.method == 'POST':
+        form = ConsultorForm(request.POST)
+        
+        from_date = request.POST['year_ini']+'-'+request.POST['month_ini']+'-01'
+        to_date = request.POST['year_end']+'-'+request.POST['month_end']+'-31'
+
+        row_data = []
+        users = []
+        for u in request.POST.getlist('co_select'):
+            #users += "'"+u+"',"
+            users.append(u)
+
+        #users = users[:-1]
+        result = CaoFatura.data_bar_graphic(from_date, to_date)
+        rows = []
+        
+        for r in result:
+            if r.co_usuario in users:
+                rows.append({
+                'no_usuario': r.no_usuario,
+                'co_usuario': r.co_usuario,
+                'ganancia_neta': r.ganancia_neta,
+                })
+            #_endif
+        #_endfor
+        #
+        
+        if len(rows):
+            data = {'data': rows}
+        else:
+            data = {'status': 'empty'}
+        
+    else:
+        data = {'status': 'error en el metodo',}
+
+    return render(request, 'consultor/_bar_graphic.html', data)
+
+
+def ajax_pie_graphic(request):
+
+    if request.method == 'POST':
+        form = ConsultorForm(request.POST)
+        
+        from_date = request.POST['year_ini']+'-'+request.POST['month_ini']+'-01'
+        to_date = request.POST['year_end']+'-'+request.POST['month_end']+'-31'
+
+        row_data = []
+        users = []
+        for u in request.POST.getlist('co_select'):
+            #users += "'"+u+"',"
+            users.append(u)
+
+        #users = users[:-1]
+        result = CaoFatura.data_bar_graphic(from_date, to_date)
+        rows = []
+        total_g = 0
+        for r in result:
+            if r.co_usuario in users:
+                total_g += r.ganancia_neta
+                rows.append({
+                'no_usuario': r.no_usuario,
+                'co_usuario': r.co_usuario,
+                'ganancia_neta': r.ganancia_neta,
+                })
+            #_endif
+        #_endfor
+        #
+        print(rows)
+        if len(rows):
+            row_result = []
+            for r in rows:
+                p_user = int(r['ganancia_neta'] * 100 / total_g)
+                row_result.append({
+                    'no_usuario': r['no_usuario'],
+                    'co_usuario': r['co_usuario'],
+                    'ganancia_neta': r['ganancia_neta'],
+                    'porcentaje': p_user,
+                    }) 
+            #_endfor
+            data = {'data': row_result, 'total_g': total_g}
+        else:
+            data = {'status': 'empty'}
+        
+    else:
+        data = {'status': 'error en el metodo',}
+
+    return render(request, 'consultor/_pie_graphic.html', data)
 

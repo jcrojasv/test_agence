@@ -1,0 +1,29 @@
+{% load staticfiles %}
+<div class="x_panel">
+  <div class="x_title">
+        <h2></h2>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+        <div id="chart"></div>
+    </div>
+  
+</div>
+<script src="{% static 'js/vendors/jquery/dist/jquery.min.js' %} "></script>
+<script>
+
+$(document).ready(function() {
+    
+  Morris.Donut({
+  element: 'chart',
+    data: [
+      {% for d in data %}
+        {label: '{{ d.co_usuario }}', value: '{{ d.porcentaje }}'}
+        {% if not loop.last  %} , {% endif %}
+      {% endfor %}
+    ]
+  });
+
+    
+});
+</script>

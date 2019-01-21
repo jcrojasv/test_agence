@@ -150,6 +150,26 @@ class CaoFatura(models.Model):
         return list_years
 
 
+    def data_bar_graphic(date_from, date_to):
+            
+
+        sql = '''SELECT co_fatura,
+                 u.no_usuario, u.co_usuario,
+                 SUM(valor) as total_facturas, SUM((valor - (valor*total_imp_inc)/100)) as ganancia_neta
+                FROM cao_fatura f 
+                INNER JOIN cao_os o ON o.co_os = f.co_os
+                INNER JOIN cao_usuario u ON u.co_usuario = o.co_usuario
+                LEFT JOIN cao_salario s ON s.co_usuario = o.co_usuario
+                WHERE data_emissao BETWEEN %s AND %s
+                GROUP BY o.co_usuario
+                ORDER BY no_usuario
+        '''
+
+        result = CaoFatura.objects.raw(sql,[date_from, date_to,])
+
+        return result
+
+
 
 class CaoOs(models.Model):
     co_os = models.AutoField(primary_key=True)
