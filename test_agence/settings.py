@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'test_agence.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_agence',
+        'NAME': 'jcrojasv$test_agence',
         'USER': 'jcrojasv',
         'PASSWORD': 'vyno+qrpb',
         'HOST': 'jcrojasv.mysql.pythonanywhere-services.com',
