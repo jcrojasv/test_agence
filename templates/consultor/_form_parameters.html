@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<form class="form-horizontal form-label-left">
+<form class="form-horizontal form-label-left" id="frm">
   {% csrf_token %}
   <div class="form-group">
     <label class="control-label col-md-1 col-sm-12 col-xs-12">{% trans 'Período' %}</label>
@@ -36,7 +36,7 @@
     <div class="col-md-12 col-sm-12 col-xs-12 text-center">
       <div class="btn-group">
         
-          <button type="button" class="btn btn-default" id="relatorio"> <i class="fa fa-file-text"></i> {% trans 'Relatorio' %}</button>
+          <button type="button" class="btn btn-default" id="relatorio" v-on:click="relatorio"> <i class="fa fa-file-text"></i> {% trans 'Relatorio' %}</button>
         
           <button type="button" class="btn btn-default" id="graphic"> <i class="fa fa-area-chart"></i> {% trans 'Gráfico' %}</button>
         

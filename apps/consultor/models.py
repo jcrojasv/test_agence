@@ -1,6 +1,18 @@
 from django.db import models
 
 
+class CaoSalario(models.Model):
+    co_usuario = models.CharField(primary_key=True, max_length=20)
+    dt_alteracao = models.DateField()
+    brut_salario = models.FloatField()
+    liq_salario = models.FloatField()
+
+    class Meta:
+        managed = False
+        db_table = 'cao_salario'
+        unique_together = (('co_usuario', 'dt_alteracao'),)
+
+
 class CaoUsuario(models.Model):
     co_usuario = models.CharField(primary_key=True, max_length=20)
     no_usuario = models.CharField(max_length=50)
@@ -33,7 +45,6 @@ class CaoUsuario(models.Model):
     uf_cidade = models.CharField(max_length=2, blank=True, null=True)
     dt_expedicao = models.DateField(blank=True, null=True)
 
-
     class Meta:
         managed = False
         db_table = 'cao_usuario'
@@ -49,13 +60,14 @@ class CaoUsuario(models.Model):
     def get_for_select():
         sql = '''SELECT u.co_usuario, u.no_usuario FROM cao_usuario u 
         INNER JOIN permissao_sistema p ON p.co_usuario = u.co_usuario
-        WHERE in_ativo = \'S\' AND co_tipo_usuario IN (0,1,2)'''
+        WHERE in_ativo = 'S' AND co_tipo_usuario IN (0,1,2)'''
         users = CaoUsuario.objects.raw(sql)
         list_users = []
         for u in users:
             list_users.append((u.co_usuario, u.no_usuario,))
         
         return list_users
+    
 
 
 class PermissaoSistema(models.Model):
@@ -81,6 +93,87 @@ class TipoUsuario(models.Model):
         managed = False
         db_table = 'tipo_usuario'
         unique_together = (('co_tipo_usuario', 'co_sistema'),)
+
+
+class CaoFatura(models.Model):
+    co_fatura = models.AutoField(primary_key=True)
+    co_cliente = models.IntegerField()
+    co_sistema = models.IntegerField()
+    co_os = models.IntegerField()
+    num_nf = models.IntegerField()
+    total = models.FloatField()
+    valor = models.FloatField()
+    data_emissao = models.DateField()
+    corpo_nf = models.TextField()
+    comissao_cn = models.FloatField()
+    total_imp_inc = models.FloatField()
+
+    class Meta:
+        managed = False
+        db_table = 'cao_fatura'
+
+    def __str__(self):
+        return self.co_fatura
+        
+    
+    def get_absolute_url(self):
+        return reverse('model-detail-view', args=[str(self.co_fatura)])
+
+
+    def tmp_sql_totals(date_from, date_to, user):
+        sql = '''SELECT co_fatura, CONCAT(MONTH(data_emissao),'-',YEAR(data_emissao)) as periodo,
+                 u.no_usuario, u.co_usuario,
+                 if(s.brut_salario IS NULL, 0, s.brut_salario) as costo_fijo,
+                 SUM(valor) as total_facturas, SUM((valor - (valor*total_imp_inc)/100)) as ganacia_neta,
+                 SUM((valor - (valor*total_imp_inc)/100) * comissao_cn / 100) as comision
+                FROM cao_fatura f 
+                INNER JOIN cao_os o ON o.co_os = f.co_os
+                INNER JOIN cao_usuario u ON u.co_usuario = o.co_usuario
+                LEFT JOIN cao_salario s ON s.co_usuario = o.co_usuario
+                WHERE data_emissao BETWEEN %s AND %s
+                AND u.co_usuario = %s
+                GROUP BY MONTH(data_emissao), YEAR(data_emissao), o.co_usuario
+                ORDER BY no_usuario, periodo
+        '''
+
+        result = CaoFatura.objects.raw(sql,[date_from, date_to,user]) 
+
+        print(result)
+        
+        return result
+
+
+
+class CaoOs(models.Model):
+    co_os = models.AutoField(primary_key=True)
+    nu_os = models.IntegerField(blank=True, null=True)
+    co_sistema = models.IntegerField(blank=True, null=True)
+    co_usuario = models.CharField(max_length=50, blank=True, null=True)
+    co_arquitetura = models.IntegerField(blank=True, null=True)
+    ds_os = models.CharField(max_length=200, blank=True, null=True)
+    ds_caracteristica = models.CharField(max_length=200, blank=True, null=True)
+    ds_requisito = models.CharField(max_length=200, blank=True, null=True)
+    dt_inicio = models.DateField(blank=True, null=True)
+    dt_fim = models.DateField(blank=True, null=True)
+    co_status = models.IntegerField(blank=True, null=True)
+    diretoria_sol = models.CharField(max_length=50, blank=True, null=True)
+    dt_sol = models.DateField(blank=True, null=True)
+    nu_tel_sol = models.CharField(max_length=20, blank=True, null=True)
+    ddd_tel_sol = models.CharField(max_length=5, blank=True, null=True)
+    nu_tel_sol2 = models.CharField(max_length=20, blank=True, null=True)
+    ddd_tel_sol2 = models.CharField(max_length=5, blank=True, null=True)
+    usuario_sol = models.CharField(max_length=50, blank=True, null=True)
+    dt_imp = models.DateField(blank=True, null=True)
+    dt_garantia = models.DateField(blank=True, null=True)
+    co_email = models.IntegerField(blank=True, null=True)
+    co_os_prospect_rel = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'cao_os'
+
+
+
 
 """
 
@@ -478,22 +571,7 @@ class CaoEscritorio(models.Model):
         db_table = 'cao_escritorio'
 
 
-class CaoFatura(models.Model):
-    co_fatura = models.AutoField(primary_key=True)
-    co_cliente = models.IntegerField()
-    co_sistema = models.IntegerField()
-    co_os = models.IntegerField()
-    num_nf = models.IntegerField()
-    total = models.FloatField()
-    valor = models.FloatField()
-    data_emissao = models.DateField()
-    corpo_nf = models.TextField()
-    comissao_cn = models.FloatField()
-    total_imp_inc = models.FloatField()
 
-    class Meta:
-        managed = False
-        db_table = 'cao_fatura'
 
 
 class CaoFaturaPag(models.Model):
@@ -768,33 +846,7 @@ class CaoOmbudsman(models.Model):
         db_table = 'cao_ombudsman'
 
 
-class CaoOs(models.Model):
-    co_os = models.AutoField(primary_key=True)
-    nu_os = models.IntegerField(blank=True, null=True)
-    co_sistema = models.IntegerField(blank=True, null=True)
-    co_usuario = models.CharField(max_length=50, blank=True, null=True)
-    co_arquitetura = models.IntegerField(blank=True, null=True)
-    ds_os = models.CharField(max_length=200, blank=True, null=True)
-    ds_caracteristica = models.CharField(max_length=200, blank=True, null=True)
-    ds_requisito = models.CharField(max_length=200, blank=True, null=True)
-    dt_inicio = models.DateField(blank=True, null=True)
-    dt_fim = models.DateField(blank=True, null=True)
-    co_status = models.IntegerField(blank=True, null=True)
-    diretoria_sol = models.CharField(max_length=50, blank=True, null=True)
-    dt_sol = models.DateField(blank=True, null=True)
-    nu_tel_sol = models.CharField(max_length=20, blank=True, null=True)
-    ddd_tel_sol = models.CharField(max_length=5, blank=True, null=True)
-    nu_tel_sol2 = models.CharField(max_length=20, blank=True, null=True)
-    ddd_tel_sol2 = models.CharField(max_length=5, blank=True, null=True)
-    usuario_sol = models.CharField(max_length=50, blank=True, null=True)
-    dt_imp = models.DateField(blank=True, null=True)
-    dt_garantia = models.DateField(blank=True, null=True)
-    co_email = models.IntegerField(blank=True, null=True)
-    co_os_prospect_rel = models.IntegerField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'cao_os'
 
 
 class CaoOsAnalista(models.Model):

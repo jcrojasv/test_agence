@@ -1,0 +1,39 @@
+{% load i18n %}
+{% load staticfiles %}
+
+<div class="x_panel">
+	<div class="x_title">
+        <h2>{% trans "Relatorio" %} </h2>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+    	{% for c in consultor %}
+
+	        <table class="table table-hover">
+		    <thead>
+		        <tr>
+		        	<td colspan="5">{{ c.usuario }}</td>
+		        </tr>
+		        <tr>
+					<th>{% trans "Período" %}</th>
+					<th>{% trans "Renta Líquida" %}</th>
+					<th>{% trans "Costo Fijo" %}</th>
+					<th>{% trans "Comisión" %}</th>
+					<th>{% trans "Lucro" %}</th>			
+			    </tr>
+			</thead>
+			{% for data in c.rows %}
+			<tbody>
+	        <tr>
+               <td>{{ data.periodo }}</td>
+               <td>{{ data.ganancia_neta}}</td>
+               <td>{{ data.costo_fijo}}</td>
+               <td>{{ data.comision }} </td>
+               <td>{{ data.lucro }}</td>
+            </tr>
+	        {% endfor %}
+		{% endfor %}
+    </div>
+        
+    
+</div><!-- fin x-panel-->

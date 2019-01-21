@@ -15,8 +15,9 @@ Including another URLconf
 """
 from django.urls import path
 
-from apps.consultor.views import index
+from apps.consultor.views import index, ajax_relatorio
 
 urlpatterns = [   
     path('', index, name='index'),
+    path('relatorio/', ajax_relatorio, name='relatorio')
 ]
