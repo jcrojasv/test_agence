@@ -74,18 +74,6 @@ def ajax_relatorio(request):
 
 
 def ajax_bar_graphic(request):
-    from xml.dom import minidom
-    from django.conf import settings 
-    base_dir = settings.BASE_DIR
-
-    #  xml document
-    #doc = minidom.parse(base_dir+"/data_line_bar.xml")
-    doc = minidom.parse(base_dir+"/example.xml")
-
-    _xml = doc.getElementsByTagName("empleado")[0]
-
-    print(_xml)
-
 
     if request.method == 'POST':
         form = ConsultorForm(request.POST)
