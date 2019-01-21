@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load humanize %}
 {% load staticfiles %}
 
 <div class="x_panel">
@@ -25,13 +26,22 @@
 			{% for data in c.rows %}
 			<tbody>
 	        <tr>
-               <td>{{ data.periodo }}</td>
-               <td>{{ data.ganancia_neta}}</td>
-               <td>{{ data.costo_fijo}}</td>
-               <td>{{ data.comision }} </td>
-               <td>{{ data.lucro }}</td>
+               <td>{{ data.data_emissao }}</td>
+               <td align="right">{{ data.ganancia_neta | floatformat:"2" | intcomma}}</td>
+               <td align="right">{{ data.costo_fijo | floatformat:"2" | intcomma }}</td>
+               <td align="right">{{ data.comision | floatformat:"2" | intcomma }}</td>
+               <td align="right">{{ data.lucro | floatformat:"2" | intcomma }}</td>
             </tr>
 	        {% endfor %}
+	        
+	           <tr class="">
+	           	  <td><strong>SALDO</strong></td>
+	           	  <td align="right"><strong>{{ c.t_renta | floatformat:"2" | intcomma }}</strong></td>
+	           	  <td align="right"><strong>{{ c.t_costo_fijo | floatformat:"2" | intcomma }}</strong></td>
+	           	  <td align="right"><strong>{{ c.t_comision | floatformat:"2" | intcomma }}</strong></td>
+	           	  <td align="right"><strong>{{ c.t_lucro | floatformat:"2" | intcomma }}</strong></td>
+	           </tr>	
+	        
 		{% endfor %}
     </div>
         

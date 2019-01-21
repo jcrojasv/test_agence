@@ -5,12 +5,12 @@
   <div class="form-group">
     <label class="control-label col-md-1 col-sm-12 col-xs-12">{% trans 'Período' %}</label>
       <div class="col-md-3 col-sm-12 col-xs-12">
-        {{ form.date_ini }}
-        <!--<input type="text" class="form-control from" placeholder="{% trans 'Fecha inicio' %}">-->
-        
+        {{ form.month_ini }}
+        {{ form.year_ini }}
       </div>
       <div class="col-md-3 col-sm-12 col-xs-12">
-        {{ form.date_end }}
+        {{ form.month_end }}
+        {{ form.year_end }}
       </div>
   </div>
   <div class="form-group">

@@ -122,9 +122,10 @@ class CaoFatura(models.Model):
 
     def tmp_sql_totals(date_from, date_to, user):
         sql = '''SELECT co_fatura, CONCAT(MONTH(data_emissao),'-',YEAR(data_emissao)) as periodo,
+                 data_emissao,
                  u.no_usuario, u.co_usuario,
                  if(s.brut_salario IS NULL, 0, s.brut_salario) as costo_fijo,
-                 SUM(valor) as total_facturas, SUM((valor - (valor*total_imp_inc)/100)) as ganacia_neta,
+                 SUM(valor) as total_facturas, SUM((valor - (valor*total_imp_inc)/100)) as ganancia_neta,
                  SUM((valor - (valor*total_imp_inc)/100) * comissao_cn / 100) as comision
                 FROM cao_fatura f 
                 INNER JOIN cao_os o ON o.co_os = f.co_os
@@ -136,11 +137,17 @@ class CaoFatura(models.Model):
                 ORDER BY no_usuario, periodo
         '''
 
-        result = CaoFatura.objects.raw(sql,[date_from, date_to,user]) 
-
-        print(result)
+        result = CaoFatura.objects.raw(sql,[date_from, date_to,user])
         
         return result
+
+
+    def get_years():
+        list_years = []
+        for u in CaoFatura.objects.dates('data_emissao', 'year'):
+            list_years.append((u.year, u.year,))
+        
+        return list_years
 
 
 

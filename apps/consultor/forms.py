@@ -1,5 +1,5 @@
 from django import forms
-from apps.consultor.models import CaoUsuario
+from apps.consultor.models import CaoUsuario, CaoFatura
 
 
 class ConsultorForm(forms.Form):
@@ -8,24 +8,42 @@ class ConsultorForm(forms.Form):
 
     users = CaoUsuario.get_for_select()
 
-    date_ini = forms.CharField(
-                max_length=7,
-                widget=forms.TextInput(
+    years = CaoFatura.get_years()
+
+    list_month = [(x, x) for x in range(1, 12)]
+
+    year_ini = forms.ChoiceField(
+                choices=years,
+                widget=forms.Select(
                     attrs={
-                      'class':class_form + ' from',
-                      'placeholder': 'Fecha inicio',
-                      'autocomplete': 'off',
+                      'class':class_form+' width_select',
                     }
                 ))
-    date_end = forms.CharField(
-               max_length=7,
-               widget=forms.TextInput(
+    year_end = forms.ChoiceField(
+                choices=years,
+                widget=forms.Select(
                     attrs={
-                      'class':class_form + ' to',
-                      'placeholder': 'Fecha fin',
-                      'autocomplete': 'off',
+                      'class':class_form+' width_select',
                     }
                 ))
+
+    month_ini = forms.ChoiceField(
+                choices=list_month,
+                widget=forms.Select(
+                    attrs={
+                      'class':class_form+' width_select',
+                    }
+                  )
+              )
+
+    month_end = forms.ChoiceField(
+                choices=list_month,
+                widget=forms.Select(
+                    attrs={
+                      'class':class_form+' width_select',
+                    }
+                  )
+              )
     consultants = forms.MultipleChoiceField(label="Consultores", 
                  choices=users, 
                  widget=forms.SelectMultiple(
