@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'g(w^3!5=kre)nd^=cz1z^)bb5p&alyz%m4i1^q(qq@5cqw9uy-'
+SECRET_KEY = 'mpfv)qf03+m84cl(7rlfy8mst0mfq@y*s*4_go)$ilm%i)q%0c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [u'jcrojasv.pythonanywhere.com']
 
 
 # Application definition
@@ -75,14 +75,13 @@ WSGI_APPLICATION = 'test_agence.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'test_agence',
-        'USER': 'test_agence',
-        'PASSWORD': '',
-        'HOST': '127.0.01',
+        'USER': 'jcrojasv',
+        'PASSWORD': 'vyno+qrpb',
+        'HOST': 'jcrojasv.mysql.pythonanywhere-services.com',
         'PORT': '3306',
 
     }
