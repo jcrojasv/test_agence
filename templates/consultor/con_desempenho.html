@@ -105,6 +105,29 @@ $(document).ready(function(){
         });
     });
 
+    $('#pie').on('click', function(event) {
+        event.preventDefault();
+        console.log('Desplegar grafico');
+        $.ajax({
+            url : "consultor/pie_graphic/", // the endpoint
+            type : "POST", // http method
+            data : $('#frm').serialize(), // data sent with the post request
+
+            // handle a successful response
+            success : function(data) {
+                $("#result").html(data);
+                console.log("success"); 
+            },
+
+            // handle a non-successful response
+            error : function(xhr,errmsg,err) {
+                $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                    " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+        });
+    });
+
     
 });
 </script>
