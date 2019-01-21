@@ -33,7 +33,7 @@ def ajax_relatorio(request):
         form = ConsultorForm(request.POST)
         
         from_date = request.POST['year_ini']+'-'+request.POST['month_ini']+'-01'
-        to_date = request.POST['year_end']+'-'+request.POST['month_end']+'-01'
+        to_date = request.POST['year_end']+'-'+request.POST['month_end']+'-31'
 
         row_data = []
         for u in request.POST.getlist('co_select'):
