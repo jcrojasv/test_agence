@@ -8,7 +8,7 @@ class CaoSalario(models.Model):
     liq_salario = models.FloatField()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'cao_salario'
         unique_together = (('co_usuario', 'dt_alteracao'),)
 
@@ -46,7 +46,7 @@ class CaoUsuario(models.Model):
     dt_expedicao = models.DateField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'cao_usuario'
 
     def __str__(self):
@@ -79,7 +79,7 @@ class PermissaoSistema(models.Model):
     dt_atualizacao = models.DateTimeField()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'permissao_sistema'
         unique_together = (('co_usuario', 'co_tipo_usuario', 'co_sistema'),)
 
@@ -90,7 +90,7 @@ class TipoUsuario(models.Model):
     co_sistema = models.BigIntegerField()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'tipo_usuario'
         unique_together = (('co_tipo_usuario', 'co_sistema'),)
 
@@ -109,7 +109,7 @@ class CaoFatura(models.Model):
     total_imp_inc = models.FloatField()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'cao_fatura'
 
     def __str__(self):
@@ -176,7 +176,7 @@ class CaoOs(models.Model):
     co_os_prospect_rel = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'cao_os'
 
 
