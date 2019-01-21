@@ -83,3 +83,43 @@ def ajax_relatorio(request):
 
     return render(request, 'consultor/_table_relatorio.html', data)
 
+
+def ajax_bar_graphic(request):
+
+    if request.method == 'POST':
+        form = ConsultorForm(request.POST)
+        
+        from_date = request.POST['year_ini']+'-'+request.POST['month_ini']+'-01'
+        to_date = request.POST['year_end']+'-'+request.POST['month_end']+'-31'
+
+        row_data = []
+        users = []
+        for u in request.POST.getlist('co_select'):
+            #users += "'"+u+"',"
+            users.append(u)
+
+        #users = users[:-1]
+        result = CaoFatura.data_bar_graphic(from_date, to_date)
+        rows = []
+        
+        for r in result:
+            if r.co_usuario in users:
+                rows.append({
+                'no_usuario': r.no_usuario,
+                'co_usuario': r.co_usuario,
+                'ganancia_neta': r.ganancia_neta,
+                })
+            #_endif
+        #_endfor
+        #
+        
+        if len(rows):
+            data = {'data': rows}
+        else:
+            data = {'status': 'empty'}
+        
+    else:
+        data = {'status': 'error en el metodo',}
+
+    return render(request, 'consultor/_bar_graphic.html', data)
+
